@@ -14,7 +14,7 @@ export const Wheel = ({ entries }: WheelProps) => {
       ];
 
     return (
-        <div>
+        <div className="w-80 h-80 relative rounded-full overflow-hidden">
         {entries.map((entry, i) => {
             const startAngle = i * sliceAngle;
             const endAngle = startAngle + sliceAngle;
@@ -28,8 +28,9 @@ export const Wheel = ({ entries }: WheelProps) => {
             const path = `M${center},${center} L${x1},${y1} A${radius},${radius} 0 ${largeArc} 1 ${x2},${y2} Z`;
             const color = colors[i % colors.length];
 
-            return <svg key={i} className="absolute top-50 inset-0 w-full h-full"><path d={path} fill={color} /></svg>
+            return <svg key={i} className="absolute inset-0 w-full h-full"><path d={path} fill={color} /></svg>
         })}
+        <div className="absolute top-2 left-1/2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-16 border-b-white transform -translate-x-1/2 -translate-y-1/2"></div>
         </div>
     )
 }

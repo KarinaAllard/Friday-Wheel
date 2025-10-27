@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <main className='flex max-w-full items-center m-10 flex-col'>
-        <h1 className="text-8xl text-(--pastel-green)">Friday Wheel</h1>
+        <h1 className="text-8xl text-(--pastel-green) mb-12">Friday Wheel</h1>
         <Wheel entries={entries}>
 
         </Wheel>
