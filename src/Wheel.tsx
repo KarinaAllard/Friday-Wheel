@@ -5,11 +5,15 @@ type WheelProps = {
     entries: string[];
 };
 
+type Winner = {
+    name: string;
+    colorClass: string;
+} | null;
+
 export const Wheel = ({ entries }: WheelProps) => {
     const [rotation, setRotation] = useState(0);
     const [spinning, setSpinning] = useState(false);
-    const [winner, setWinner] = useState<string | null>(null);
-    const [hasSpun, setHasSpun] = useState(false);
+    const [winner, setWinner] = useState<Winner>(null);
     const sliceAngle = 360 / entries.length;
 
     const colors = [
@@ -28,18 +32,13 @@ export const Wheel = ({ entries }: WheelProps) => {
     const spinWheel = () => {
         if (spinning) return;
         setSpinning(true);
-        setWinner(null);
-        setHasSpun(true);
+        
+        const winnerIndex = Math.floor(Math.random() * entries.length);
+        const fullSpins = 3;
+        const targetRotation = fullSpins * 360 + winnerIndex * sliceAngle + sliceAngle / 2;
 
-        const spins = Math.floor(Math.random() * 360) + 720;
-        setRotation(prev => prev + spins);
+        setRotation(prev => prev + targetRotation);
     };
-
-    const getWinner = () => {
-        const normalized = (rotation + sliceAngle / 2) % 360;
-        const index = entries.length -1 - Math.floor(normalized / sliceAngle);
-        return entries[index];
-    }
 
     return (
         <div className="flex flex-col items-center relative gap-4">
@@ -48,8 +47,14 @@ export const Wheel = ({ entries }: WheelProps) => {
                 animate={{ rotate: rotation }}
                 transition={{ duration: spinDuration, ease: [0.33, 1, 0.68, 1] }}
                 onAnimationComplete={() => {
-                    setWinner(getWinner());
+                    if (!spinning) return;
                     setSpinning(false);
+                    const normalized = (rotation + 90) % 360;
+                    const index = (entries.length - 1 - Math.floor(normalized / sliceAngle) + entries.length) % entries.length;
+                    setWinner({ 
+                        name: entries[index], 
+                        colorClass: colors[index % colors.length] 
+                    });
                 }}
             >
             {entries.map((entry, i) => {
@@ -76,9 +81,9 @@ export const Wheel = ({ entries }: WheelProps) => {
                 {spinning ? "Spinning.." : "Spin the Wheel!"}
             </button>
 
-            {hasSpun && winner && (
+            {winner && (
                 <div className="text-4xl flex gap-10">
-                    Winner: <span className="text-(--pastel-yellow)">{winner}</span>
+                    Winner: <span style={{ color: winner.colorClass }}>{winner.name}</span>
                 </div>
             )}
         </div>
