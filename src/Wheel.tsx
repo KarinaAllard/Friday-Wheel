@@ -8,6 +8,8 @@ type WheelProps = {
 export const Wheel = ({ entries }: WheelProps) => {
     const [rotation, setRotation] = useState(0);
     const [spinning, setSpinning] = useState(false);
+    const [winner, setWinner] = useState<string | null>(null);
+    const [hasSpun, setHasSpun] = useState(false);
     const sliceAngle = 360 / entries.length;
 
     const colors = [
@@ -26,10 +28,18 @@ export const Wheel = ({ entries }: WheelProps) => {
     const spinWheel = () => {
         if (spinning) return;
         setSpinning(true);
+        setWinner(null);
+        setHasSpun(true);
 
         const spins = Math.floor(Math.random() * 360) + 720;
         setRotation(prev => prev + spins);
     };
+
+    const getWinner = () => {
+        const normalized = (rotation + sliceAngle / 2) % 360;
+        const index = entries.length -1 - Math.floor(normalized / sliceAngle);
+        return entries[index];
+    }
 
     return (
         <div className="flex flex-col items-center relative gap-4">
@@ -38,6 +48,7 @@ export const Wheel = ({ entries }: WheelProps) => {
                 animate={{ rotate: rotation }}
                 transition={{ duration: spinDuration, ease: [0.33, 1, 0.68, 1] }}
                 onAnimationComplete={() => {
+                    setWinner(getWinner());
                     setSpinning(false);
                 }}
             >
@@ -62,8 +73,14 @@ export const Wheel = ({ entries }: WheelProps) => {
                 onClick={spinWheel}
                 disabled={spinning}
             >
-                Spin the Wheel!
+                {spinning ? "Spinning.." : "Spin the Wheel!"}
             </button>
+
+            {hasSpun && winner && (
+                <div className="text-4xl flex gap-10">
+                    Winner: <span className="text-(--pastel-yellow)">{winner}</span>
+                </div>
+            )}
         </div>
     )
 }
