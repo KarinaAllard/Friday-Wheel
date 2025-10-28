@@ -5,7 +5,7 @@ export async function fetchSheetEntries(sheetId: string): Promise<string[]> {
     const text = await res.text();
 
     const json = JSON.parse(text.substring(47).slice(0, -2));
-    const entries = json.table.rows.map((row: any) => row.c[0].v);
+    const entries = json.table.rows.map((row: any) => row.c[0].v).slice(1);
 
     return entries;
 }
