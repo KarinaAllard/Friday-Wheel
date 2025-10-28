@@ -34,6 +34,9 @@ export const Wheel = ({ entries }: WheelProps) => {
     const spinWheel = () => {
         if (spinning) return;
         setSpinning(true);
+
+        const audio = new Audio("/spin.mp3");
+        audio.play();
         
         const winnerIndex = Math.floor(Math.random() * entries.length);
         const fullSpins = 3;
