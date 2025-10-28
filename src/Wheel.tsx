@@ -43,7 +43,7 @@ export const Wheel = ({ entries }: WheelProps) => {
         setSpinning(true);
         setWinner(null);
 
-        const audio = new Audio("/spin.mp3");
+        const audio = new Audio(`${import.meta.env.BASE_URL}spin.mp3`);
         audio.play();
         
         const winnerIndex = Math.floor(Math.random() * entries.length);
