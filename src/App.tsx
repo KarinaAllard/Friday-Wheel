@@ -1,12 +1,28 @@
+import { useEffect, useState } from "react";
 import { Wheel } from "./Wheel";
+import { fetchSheetEntries } from "./services/sheetService";
 
+const sheetId = "1vuf0i_XZRzcQWgKthR5V1YHGvxwg0E_AXFIderMYBps";
 function App() {
-  const entries = [
-    "Pizza Place", "Sushi Bar", "Burgers", "Taco Truck", "Salad Corner",
-    "Ramen House", "BBQ Spot", "Sandwiches", "Indian Curry", "Pasta",
-    "Thai Food", "Bagels", "Smoothies", "Mexican Grill", "Coffee & Snacks"
-  ];
+  const [entries, setEntries] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect (() => {
+    const load = async () => {
+      try {
+        const data = await fetchSheetEntries(sheetId);
+        setEntries(data);
+      } catch (error) {
+        console.error("Failed to fetch sheet:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (entries.length === 0) return <p>No entries found.</p>
   return (
     <>
       <main className='flex max-w-full items-center m-10 flex-col'>
