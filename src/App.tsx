@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Wheel } from "./Wheel";
-import { fetchSheetEntries } from "./services/sheetService";
+import { fetchSheetEntries, type Entry } from "./services/sheetService";
 
 const sheetId = "1vuf0i_XZRzcQWgKthR5V1YHGvxwg0E_AXFIderMYBps";
 function App() {
-  const [entries, setEntries] = useState<string[]>([]);
+  const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect (() => {

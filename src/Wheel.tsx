@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import type { Entry } from "./services/sheetService";
 
 type WheelProps = {
-    entries: string[];
+    entries: Entry[];
 };
 
 type Winner = {
-    name: string;
+    restaurant: string;
+    suggestedBy: string;
     colorClass: string;
 } | null;
 
@@ -51,8 +53,10 @@ export const Wheel = ({ entries }: WheelProps) => {
                     setSpinning(false);
                     const normalized = (rotation + 90) % 360;
                     const index = (entries.length - 1 - Math.floor(normalized / sliceAngle) + entries.length) % entries.length;
+                    const chosen = entries [index];
                     setWinner({ 
-                        name: entries[index], 
+                        restaurant: chosen.restaurant,
+                        suggestedBy: chosen.suggestedBy, 
                         colorClass: colors[index % colors.length] 
                     });
                 }}
@@ -82,8 +86,18 @@ export const Wheel = ({ entries }: WheelProps) => {
             </button>
 
             {winner && (
-                <div className="text-4xl flex gap-10">
-                    Winner: <span style={{ color: winner.colorClass }}>{winner.name}</span>
+                <div className="text-4xl flex flex-col items-center">
+                    <span>
+                        Winner:{" "}
+                        <span style={{ color: winner.colorClass }}>
+                            {winner.restaurant}
+                        </span>
+                    </span>
+                    {winner.suggestedBy && (
+                        <span className="text-xl opacity-70">
+                            (suggested by {winner.suggestedBy})
+                        </span>
+                    )}
                 </div>
             )}
         </div>
