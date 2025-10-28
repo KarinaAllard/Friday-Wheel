@@ -32,7 +32,7 @@ export const Wheel = ({ entries }: WheelProps) => {
     const radius = size / 2;
     const center = radius;
 
-    const { reward, isAnimating } = useReward("confetti", "confetti", {
+    const { reward } = useReward("confetti", "confetti", {
        lifetime: 100,
         spread: 90,
         startVelocity: 30, 
@@ -73,7 +73,7 @@ export const Wheel = ({ entries }: WheelProps) => {
                     reward();
                 }}
             >
-            {entries.map((entry, i) => {
+            {entries.map((_, i) => {
                 const startAngle = i * sliceAngle;
                 const endAngle = startAngle + sliceAngle;
                 const largeArc = sliceAngle > 180 ? 1 : 0;
